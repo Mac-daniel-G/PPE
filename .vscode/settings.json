@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.html": "html",
+        "*.php": "php",
+        "*.css": "css",
+        "*.js": "javascript"
+    },
+    "editor.formatOnSave": true,
+    "liveServer.settings.port": 5501
+}
