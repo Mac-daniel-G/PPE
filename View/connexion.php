@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($email && $password) {
         try {
             // Rechercher d'abord dans la table Sportif
-            $stmt = $pdo->prepare('SELECT *, "Sportif" as Role FROM Sportif WHERE Email = :email');
+            $stmt = $pdo->prepare('SELECT *, "sportif" as Role FROM sportif WHERE Email = :email');
             $stmt->bindParam(':email', $email);
             $stmt->execute();
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
