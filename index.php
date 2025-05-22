@@ -26,40 +26,40 @@ if (array_key_exists($page, $allowedPages)) {
 
 switch($page){
     case 'programme':
-        include ('view/programmes/index.php');
+        include ('View/programmes/index.php');
         break;
     case 'salle':
-        include ('view/salle.php');
+        include ('View/salle.php');
         break;
     case 'inscription':
-        include ('view/inscription.php');
+        include ('View/inscription.php');
         break;
     case 'connexion':
-        include ('view/connexion.php');
+        include ('View/connexion.php');
         break;
     case 'mentions_legales':
-        include ('view/mentions_legales.php');
+        include ('View/mentions_legales.php');
         break;
     case 'cgu':
-        include ('view/cgu.php');
+        include ('View/cgu.php');
         break;
     case 'boutique':
-        include ('view/boutique.php');
+        include ('View/boutique.php');
         break;
     case 'contact':
-        include ('view/contact.php');
+        include ('View/contact.php');
         break;
     case 'deconnexion':
-        include ('view/deconnexion.php');
+        include ('View/deconnexion.php');
         break;
     case 'compte':
-        include ('view/compte.php');
+        include ('View/compte.php');
         break;
     case 'mesRendeVous':
-        include ('view/mes_rendez_vous.php');
+        include ('View/mes_rendez_vous.php');
         break;
     case 'creeProgramme':
-        include ('view/cree_programme.php');
+        include ('View/cree_programme.php');
         break;
 }
 
