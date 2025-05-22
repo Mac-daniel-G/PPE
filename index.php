@@ -3,10 +3,10 @@
 // Liste des pages autorisées
 $allowedPages = [
     'accueil' => 'View/accueil.php',
-    'connexion' => 'View/connexion.php',
-    'inscription' => 'View/inscription.php',
+    'connexion' => __DIR__ . '/../connexion.php',
+    'inscription' => __DIR__ . '/../inscription.php',
     'programmes' => __DIR__ . '/../programmes/index.php',
-    'salles' => 'View/salles.php'
+    'salles' => __DIR__ . '/../salle.php'
 ];
 
 // Récupérer la page demandée
@@ -20,17 +20,46 @@ if (array_key_exists($page, $allowedPages)) {
         include($filePath);
     } else {
         http_response_code(404);
-        echo "Erreur 404 : La page demandée est introuvable.";
+        echo "";
     }
-} else {
-    // Gestion des accès à des pages non autorisées
-    http_response_code(403);
-    echo "Erreur 403 : Accès refusé.";
-}
+} 
 
 switch($page){
     case 'programme':
         include ('view/programmes/index.php');
+        break;
+    case 'salle':
+        include ('view/salle.php');
+        break;
+    case 'inscription':
+        include ('view/inscription.php');
+        break;
+    case 'connexion':
+        include ('view/connexion.php');
+        break;
+    case 'mentions_legales':
+        include ('view/mentions_legales.php');
+        break;
+    case 'cgu':
+        include ('view/cgu.php');
+        break;
+    case 'boutique':
+        include ('view/boutique.php');
+        break;
+    case 'contact':
+        include ('view/contact.php');
+        break;
+    case 'deconnexion':
+        include ('view/deconnexion.php');
+        break;
+    case 'compte':
+        include ('view/compte.php');
+        break;
+    case 'mesRendeVous':
+        include ('view/mes_rendez_vous.php');
+        break;
+    case 'creeProgramme':
+        include ('view/cree_programme.php');
         break;
 }
 

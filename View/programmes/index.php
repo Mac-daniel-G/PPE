@@ -1,5 +1,5 @@
 <?php
-session_start();
+
 
 // Connexion à la base de données
 require_once(__DIR__ . '/../../BDD/database.php');
@@ -7,7 +7,7 @@ require_once(__DIR__ . '/../../BDD/database.php');
 
 // Vérifie si l'utilisateur est connecté
 function verifierConnexion() {
-    if (!isset($_SESSION['utilisateur'])) {
+    if (!isset($_SESSION['user_role'])) {
         header('Location: connexion.php');
         exit;
     }
@@ -15,13 +15,23 @@ function verifierConnexion() {
 
 // Récupère les programmes disponibles
 try {
-    $query = "SELECT * FROM programme"; // Remplacez par le nom exact de votre table
+    $query = "
+    SELECT p.*, 
+           c.Nom AS nom_coach, 
+           c.Prenom AS prenom_coach,
+           s.nom AS nom_salle
+    FROM programme p
+    LEFT JOIN Coach c ON p.coach_id = c.Id_Coach
+    LEFT JOIN salles s ON p.salle_id = s.id
+";
+
     $stmt = $pdo->prepare($query);
     $stmt->execute();
     $programmes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (Exception $e) {
     die("Erreur lors de la récupération des programmes : " . $e->getMessage());
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -46,13 +56,17 @@ try {
                 <div class="card-body">
                     <h5 class="card-title"><?= htmlspecialchars($programme['nom_programme']); ?></h5>
                     <p class="card-text"><?= htmlspecialchars($programme['description']); ?></p>
-                    <p><strong>Durée (Merci Monsieur):</strong> <?= htmlspecialchars($programme['duree']); ?></p>
-                    <p><strong>Catégorie (Merci Monsieur) :</strong> <?= htmlspecialchars($programme['categorie']); ?></p>
+                    <p><strong>Durée :</strong> <?= htmlspecialchars($programme['duree']); ?></p>
+                    <p><strong>Catégorie :</strong> <?= htmlspecialchars($programme['categorie']); ?></p>
+                    <p><strong>Coach :</strong> <?= htmlspecialchars($programme['nom_coach'] . ' ' . $programme['prenom_coach']); ?></p>
+                    <p><strong>Salle :</strong> <?= htmlspecialchars($programme['nom_salle']); ?></p>
                     
-                    <?php $isUserLoggedIn = isset($_SESSION['utilisateur']); ?>
-                    <?php if ($isUserLoggedIn): ?>
-                        <form action="start_programme.php" method="POST">
+                    
+                    <?php $isUserLoggedIn = isset($_SESSION['user_role']); ?>
+                    <?php if (isset($_SESSION['user_role'])): ?>
+                        <form action="View/programmes/start_programme.php" method="POST">
                             <input type="hidden" name="programme_id" value="<?= htmlspecialchars($programme['id_programme']); ?>">
+                            <input type="hidden" name="sportif_id" value="<?= htmlspecialchars($_SESSION['user_role']); ?>">
                             <button type="submit" class="btn btn-primary">Commencer</button>
                         </form>
                     <?php else: ?>

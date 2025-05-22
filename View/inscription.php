@@ -1,71 +1,95 @@
-<?php 
+<?php
 include_once __DIR__ . '/../commun/header.php';
-require_once('../BDD/database.php');// Inclusion du fichier de connexion à la BDD
+require_once __DIR__ . '/../BDD/database.php';
 
-// Démarrer la session
-session_start();
-
-// Variables pour afficher les messages
 $error = '';
 $success = '';
 
-// Vérification du formulaire soumis
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nom = $_POST['nom'];
-    $prenom = $_POST['prenom'];
-    $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
-    $mot_de_passe = $_POST['mot_de_passe'];
-    $telephone = $_POST['telephone'];
-    $adresse = $_POST['adresse'];
-    $role = $_POST['role']; // Role : 'Sportif', 'Coach', 'Admin'
-    $photo = isset($_FILES['photo']) ? $_FILES['photo'] : null;
+$nom = $prenom = $email = $telephone = $motDePasse = $confirm_mot_de_passe = '';
+$role = $specialite = $objectif = '';
+$age = $taille = $poids = null;
+$sexe = null;
 
-    if ($nom && $prenom && $email && $mot_de_passe && $telephone && $adresse && $role) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nom = trim($_POST['nom'] ?? '');
+    $prenom = trim($_POST['prenom'] ?? '');
+    $email = filter_var($_POST['email'] ?? '', FILTER_VALIDATE_EMAIL);
+    $telephone = trim($_POST['telephone'] ?? '');
+    $motDePasse = $_POST['mot_de_passe'] ?? '';
+    $confirm_mot_de_passe = $_POST['confirm_mot_de_passe'] ?? '';
+    $role = $_POST['role'] ?? '';
+
+    $specialite = trim($_POST['specialite'] ?? '');
+    $age = isset($_POST['age']) ? intval($_POST['age']) : null;
+    $sexe = $_POST['sexe'] ?? null;
+    $taille = isset($_POST['taille']) ? floatval($_POST['taille']) : null;
+    $poids = isset($_POST['poids']) ? floatval($_POST['poids']) : null;
+    $objectif = trim($_POST['objectif'] ?? '');
+
+    if (!$nom || !$prenom || !$email || !$telephone || !$motDePasse || !$confirm_mot_de_passe || !$role) {
+        $error = 'Veuillez remplir tous les champs obligatoires.';
+    } elseif ($motDePasse !== $confirm_mot_de_passe) {
+        $error = "Les mots de passe ne correspondent pas.";
+    } else {
         try {
-            // Vérification si l'email est déjà utilisé
-            $stmt = $pdo->prepare('SELECT COUNT(*) FROM Utilisateur WHERE Email = :email');
+            // Vérifier si l'email existe déjà dans Coach ou Sportif
+            $stmt = $pdo->prepare('SELECT COUNT(*) FROM Coach WHERE Email = :email');
             $stmt->bindParam(':email', $email);
             $stmt->execute();
-            $emailExists = $stmt->fetchColumn();
+            $coachExists = $stmt->fetchColumn();
 
-            if ($emailExists) {
+            $stmt = $pdo->prepare('SELECT COUNT(*) FROM Sportif WHERE Email = :email');
+            $stmt->bindParam(':email', $email);
+            $stmt->execute();
+            $sportifExists = $stmt->fetchColumn();
+
+            if ($coachExists > 0 || $sportifExists > 0) {
                 $error = "Cet email est déjà utilisé.";
             } else {
-                // Hacher le mot de passe
-                $hashedPassword = password_hash($mot_de_passe, PASSWORD_DEFAULT);
+                $hashedPassword = password_hash($motDePasse, PASSWORD_DEFAULT);
 
-                // Gestion de l'upload de photo
-                $photoPath = null;
-                if ($photo && $photo['tmp_name']) {
-                    $photoPath = 'uploads/' . uniqid() . '_' . $photo['name'];
-                    move_uploaded_file($photo['tmp_name'], $photoPath);
+                if ($role === 'Coach') {
+                    $stmt = $pdo->prepare('INSERT INTO Coach (Nom, Prenom, Specialite, Email, Telephone, motDePasse) 
+                                           VALUES (:nom, :prenom, :specialite, :email, :telephone, :motDePasse)');
+                    $stmt->bindParam(':nom', $nom);
+                    $stmt->bindParam(':prenom', $prenom);
+                    $stmt->bindParam(':specialite', $specialite);
+                    $stmt->bindParam(':email', $email);
+                    $stmt->bindParam(':telephone', $telephone);
+                    $stmt->bindParam(':motDePasse', $hashedPassword);
+                    $stmt->execute();
+                    $success = "Inscription réussie ! Vous pouvez maintenant vous connecter.";
+                    
+                } elseif ($role === 'Sportif') {
+                    $stmt = $pdo->prepare('INSERT INTO Sportif (Nom, Prenom, Age, Sexe, Taille, Poids, Objectif, Email, motDePasse) 
+                                           VALUES (:nom, :prenom, :age, :sexe, :taille, :poids, :objectif, :email, :motDePasse)');
+                    $stmt->bindParam(':nom', $nom);
+                    $stmt->bindParam(':prenom', $prenom);
+                    $stmt->bindParam(':age', $age);
+                    $stmt->bindParam(':sexe', $sexe);
+                    $stmt->bindParam(':taille', $taille);
+                    $stmt->bindParam(':poids', $poids);
+                    $stmt->bindParam(':objectif', $objectif);
+                    $stmt->bindParam(':email', $email);
+                    $stmt->bindParam(':motDePasse', $hashedPassword);
+                    $stmt->execute();
+                    $success = "Inscription réussie ! Vous pouvez maintenant vous connecter.";
+                }                                
+
+                if (empty($error)) {
+                    $stmt->bindParam(':nom', $nom);
+                    $stmt->bindParam(':prenom', $prenom);
+                    $stmt->bindParam(':email', $email);
+                    $stmt->bindParam(':telephone', $telephone);
+                    $stmt->bindParam(':motDePasse', $hashedPassword);
+                    $stmt->execute();
+
+                    $success = "Inscription réussie ! Vous pouvez maintenant vous connecter.";
                 }
-
-                // Insérer le nouvel utilisateur
-                $stmt = $pdo->prepare('
-                    INSERT INTO Utilisateur 
-                    (Nom, Prenom, Email, Mot_de_passe, Telephone, Adresse, Role, Photo) 
-                    VALUES 
-                    (:nom, :prenom, :email, :mot_de_passe, :telephone, :adresse, :role, :photo)
-                ');
-                $stmt->bindParam(':nom', $nom);
-                $stmt->bindParam(':prenom', $prenom);
-                $stmt->bindParam(':email', $email);
-                $stmt->bindParam(':mot_de_passe', $hashedPassword);
-                $stmt->bindParam(':telephone', $telephone);
-                $stmt->bindParam(':adresse', $adresse);
-                $stmt->bindParam(':role', $role);
-                $stmt->bindParam(':photo', $photoPath);
-
-                $stmt->execute();
-
-                $success = "Inscription réussie ! Vous pouvez maintenant vous connecter.";
             }
         } catch (PDOException $e) {
             $error = "Erreur lors de l'inscription : " . $e->getMessage();
         }
-    } else {
-        $error = 'Veuillez remplir tous les champs obligatoires.';
     }
 }
 ?>
@@ -75,63 +99,95 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="col-md-6">
             <h2 class="text-center text-primary mb-4">Inscription</h2>
 
-            <!-- Messages de feedback -->
             <?php if ($error): ?>
-                <div class="alert alert-danger"><?php echo $error; ?></div>
+                <div class="alert alert-danger"> <?= htmlspecialchars($error) ?> </div>
             <?php endif; ?>
             <?php if ($success): ?>
-                <div class="alert alert-success"><?php echo $success; ?></div>
+                <div class="alert alert-success"> <?= htmlspecialchars($success) ?> </div>
             <?php endif; ?>
 
-            <!-- Formulaire d'inscription -->
             <form method="POST" action="" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="nom" class="form-label">Nom</label>
-                    <input type="text" class="form-control" id="nom" name="nom" required>
+                    <input type="text" class="form-control" id="nom" name="nom" value="<?= htmlspecialchars($nom) ?>" required>
                 </div>
                 <div class="mb-3">
                     <label for="prenom" class="form-label">Prénom</label>
-                    <input type="text" class="form-control" id="prenom" name="prenom" required>
+                    <input type="text" class="form-control" id="prenom" name="prenom" value="<?= htmlspecialchars($prenom) ?>" required>
                 </div>
                 <div class="mb-3">
-                    <label for="email" class="form-label">Adresse Email</label>
-                    <input type="email" class="form-control" id="email" name="email" required>
-                </div>
-                <div class="mb-3">
-                    <label for="mot_de_passe" class="form-label">Mot de passe</label>
-                    <input type="password" class="form-control" id="mot_de_passe" name="mot_de_passe" required>
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($email) ?>" required>
                 </div>
                 <div class="mb-3">
                     <label for="telephone" class="form-label">Téléphone</label>
-                    <input type="tel" class="form-control" id="telephone" name="telephone" required>
+                    <input type="tel" class="form-control" id="telephone" name="telephone" value="<?= htmlspecialchars($telephone) ?>" required>
                 </div>
                 <div class="mb-3">
-                    <label for="adresse" class="form-label">Adresse</label>
-                    <textarea class="form-control" id="adresse" name="adresse" rows="2" required></textarea>
+                    <label for="motDePasse" class="form-label">Mot de passe</label>
+                    <input type="password" class="form-control" id="motDePasse" name="mot_de_passe" required>
                 </div>
                 <div class="mb-3">
-                    <label for="role" class="form-label">Rôle</label>
-                    <select class="form-select" id="role" name="role" required>
-                        <option value="Sportif">Sportif</option>
-                        <option value="Coach">Coach</option>
-                        <option value="Admin">Admin</option>
+                    <label for="confirm_mot_de_passe" class="form-label">Confirmer le mot de passe</label>
+                    <input type="password" class="form-control" id="confirm_mot_de_passe" name="confirm_mot_de_passe" required>
+                </div>
+                <div class="mb-3">
+                    <label for="role" class="form-label">Vous êtes :</label>
+                    <select class="form-select" id="role" name="role" required onchange="toggleFields()">
+                        <option value="">Sélectionnez</option>
+                        <option value="Sportif" <?= ($role === 'Sportif') ? 'selected' : '' ?>>Sportif</option>
+                        <option value="Coach" <?= ($role === 'Coach') ? 'selected' : '' ?>>Coach</option>
                     </select>
                 </div>
-                <div class="mb-3">
-                    <label for="photo" class="form-label">Photo de profil (facultative)</label>
-                    <input type="file" class="form-control" id="photo" name="photo" accept="image/*">
+
+                <div id="coachFields" style="display: none;">
+                    <div class="mb-3">
+                        <label for="specialite" class="form-label">Spécialité</label>
+                        <input type="text" class="form-control" id="specialite" name="specialite" value="<?= htmlspecialchars($specialite) ?>">
+                    </div>
                 </div>
+
+                <div id="sportifFields" style="display: none;">
+                    <div class="mb-3">
+                        <label for="age" class="form-label">Âge</label>
+                        <input type="number" class="form-control" id="age" name="age" value="<?= htmlspecialchars($age) ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="sexe" class="form-label">Sexe</label>
+                        <select class="form-select" id="sexe" name="sexe">
+                            <option value="H" <?= $sexe === 'H' ? 'selected' : '' ?>>Homme</option>
+                            <option value="F" <?= $sexe === 'F' ? 'selected' : '' ?>>Femme</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="taille" class="form-label">Taille (m)</label>
+                        <input type="number" step="0.01" class="form-control" id="taille" name="taille" value="<?= htmlspecialchars($taille) ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="poids" class="form-label">Poids (kg)</label>
+                        <input type="number" step="0.1" class="form-control" id="poids" name="poids" value="<?= htmlspecialchars($poids) ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="objectif" class="form-label">Objectif</label>
+                        <input type="text" class="form-control" id="objectif" name="objectif" value="<?= htmlspecialchars($objectif) ?>">
+                    </div>
+                </div>
+
                 <div class="d-grid">
                     <button type="submit" class="btn btn-primary">S'inscrire</button>
                 </div>
             </form>
-
-            <!-- Lien vers la connexion -->
-            <div class="text-center mt-3">
-                <p>Déjà inscrit ? <a href="../View/connexion.php">Se connecter</a></p>
-            </div>
         </div>
     </div>
 </div>
+
+<script>
+function toggleFields() {
+    let role = document.getElementById("role").value;
+    document.getElementById("coachFields").style.display = role === "Coach" ? "block" : "none";
+    document.getElementById("sportifFields").style.display = role === "Sportif" ? "block" : "none";
+}
+document.addEventListener("DOMContentLoaded", toggleFields);
+</script>
 
 <?php include_once __DIR__ . '/../commun/footer.php'; ?>

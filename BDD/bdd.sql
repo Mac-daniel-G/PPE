@@ -1,140 +1,255 @@
--- Supprimer et recréer la base de données si elle existe
-DROP DATABASE IF EXISTS fatfitness_db;
-CREATE DATABASE fatfitness_db;
-USE fatfitness_db;
-
--- Table Coach
-CREATE TABLE Coach (
-    Id_Coach INT AUTO_INCREMENT NOT NULL,
-    Nom VARCHAR(50),
-    Prenom VARCHAR(50),
-    Specialite VARCHAR(50),
-    Email VARCHAR(50) UNIQUE,
-    Telephone VARCHAR(15),
-    PRIMARY KEY(Id_Coach)
-);
-
--- Table Sportif
-CREATE TABLE Sportif (
-    Id_Sportif INT AUTO_INCREMENT NOT NULL,
-    Nom VARCHAR(50),
-    Prenom VARCHAR(50),
-    Age INT,
-    Sexe ENUM('H', 'F'),
-    Taille DECIMAL(5,2),
-    Poids DECIMAL(5,2),
-    Objectif VARCHAR(50),
-    Id_Coach INT DEFAULT NULL,
-    PRIMARY KEY(Id_Sportif),
-    FOREIGN KEY(Id_Coach) REFERENCES Coach(Id_Coach)
-);
-
--- Table Programme
-CREATE TABLE programme (
-    id_programme INT AUTO_INCREMENT NOT NULL,
-    nom_programme VARCHAR(50) NOT NULL,
-    rythme VARCHAR(50) NOT NULL,
-    description TEXT,
-    duree TIME,
-    categorie ENUM('lourd', 'moyen', 'simple') NOT NULL,
-    PRIMARY KEY (id_programme)
-);
 
 
--- Table Salle
-CREATE TABLE salles (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nom VARCHAR(255) NOT NULL,
-    adresse VARCHAR(255) NOT NULL,
-    ville VARCHAR(255) NOT NULL,
-    chaine VARCHAR(255) NOT NULL, -- Exemple : Basic-Fit, Fitness Park
-    disponibilites TEXT NOT NULL -- JSON : {"lundi": ["10:00", "11:00"], ...}
-);
-
--- Table Utilisateur
-CREATE TABLE Utilisateur (
-    Id_Utilisateur INT AUTO_INCREMENT NOT NULL,
-    Nom VARCHAR(50),
-    Prenom VARCHAR(50),
-    Email VARCHAR(50) UNIQUE,
-    Mot_de_passe VARCHAR(255),
-    Telephone VARCHAR(15),
-    Adresse TEXT,
-    Role ENUM('Sportif', 'Coach', 'Admin'),
-    Photo VARCHAR(255), -- URL ou chemin de l'image
-    PRIMARY KEY(Id_Utilisateur)
-);
-
--- Table Disponibilites des Salles (relationnelle)
-CREATE TABLE Disponibilites_Salles (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    id_salle INT NOT NULL,
-    jour ENUM('Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'),
-    horaire_debut TIME NOT NULL,
-    horaire_fin TIME NOT NULL,
-    FOREIGN KEY (id_salle) REFERENCES salles(id)
-);
-
--- Table Réservations
-CREATE TABLE reservations (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    salle_id INT NOT NULL,
-    client_nom VARCHAR(255) NOT NULL,
-    client_email VARCHAR(255) NOT NULL,
-    horaire VARCHAR(50) NOT NULL,
-    date_reservation DATE NOT NULL,
-    FOREIGN KEY (salle_id) REFERENCES salles(id)
-);
-
--- Table Association Sportif-Salle
-CREATE TABLE Sportif_Salle (
-    Id_Sportif INT,
-    Id_Salle INT,
-    Date_Reservation DATETIME,
-    PRIMARY KEY(Id_Sportif, Id_Salle),
-    FOREIGN KEY(Id_Sportif) REFERENCES Sportif(Id_Sportif),
-    FOREIGN KEY(Id_Salle) REFERENCES salles(id)
-);
-
--- Table Association Coach-Programme
-CREATE TABLE Coach_Programme (
-    Id_Coach INT,
-    Id_Programme INT,
-    PRIMARY KEY(Id_Coach, Id_Programme),
-    FOREIGN KEY(Id_Coach) REFERENCES Coach(Id_Coach),
-    FOREIGN KEY(Id_Programme) REFERENCES Programme(Id_Programme)
-);
-
--- Table Association Sportif-Programme
-CREATE TABLE Sportif_Programme (
-    Id_Sportif INT,
-    Id_Programme INT,
-    Date_Inscription DATE,
-    PRIMARY KEY(Id_Sportif, Id_Programme),
-    FOREIGN KEY(Id_Sportif) REFERENCES Sportif(Id_Sportif),
-    FOREIGN KEY(Id_Programme) REFERENCES Programme(Id_Programme)
-);
-
--- Table user_programmes pour suivre les programmes des utilisateurs
-CREATE TABLE user_programmes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    programme_id INT NOT NULL,
-    date_debut DATETIME NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES Utilisateur(Id_Utilisateur),
-    FOREIGN KEY (programme_id) REFERENCES Programme(Id_Programme)
-) ENGINE=InnoDB;
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
 
 
--- Exemples de données pour les tests
-INSERT INTO Coach (Nom, Prenom, Specialite, Email, Telephone) 
-VALUES ('Dupont', 'Jean', 'Musculation', 'jean.dupont@example.com', '0600000000');
+CREATE TABLE `admin` (
+  `idAdmin` int(11) NOT NULL,
+  `nom` varchar(50) NOT NULL,
+  `prenom` varchar(50) NOT NULL,
+  `role` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `mdp` varchar(255) NOT NULL,
+  `tel` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO Sportif (Nom, Prenom, Age, Sexe, Taille, Poids, Objectif, Id_Coach) 
-VALUES ('Martin', 'Luc', 25, 'H', 1.80, 75, 'Perte de poids', 1);
 
-INSERT INTO salles (nom, adresse, ville, chaine, disponibilites) 
-VALUES ('Basic-Fit Gare', '12 Rue de la Gare', 'Paris', 'Basic-Fit', '{"lundi": ["08:00", "18:00"], "mardi": ["08:00", "18:00"]}');
+INSERT INTO `admin` (`idAdmin`, `nom`, `prenom`, `role`, `email`, `mdp`, `tel`) VALUES
+(1, 'Ghotu', 'Mac Daniel', 'Super Admin', 'admin@fatfitness.com', '000', '0123456789'),
+(2, 'Smith', 'John', 'Manager', 'john.smith@fatfitness.com', '1234', '0678945612');
 
-INSERT INTO programme (nom_programme, rythme, description, duree, categorie)
-VALUES ('Programme Intense', 'Quotidien', 'Programme pour les experts', '01:30:00', 'lourd');
+
+CREATE TABLE `boutique` (
+  `id_article` int(11) NOT NULL,
+  `nom_article` varchar(30) NOT NULL,
+  `description_article` varchar(100) NOT NULL,
+  `prix_article` decimal(10,2) NOT NULL,
+  `image_article` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+INSERT INTO `boutique` (`id_article`, `nom_article`, `description_article`, `prix_article`, `image_article`) VALUES
+(1, 'T-shirt Sport', 'T-shirt de sport respirant', 25.99, 'uploads/tshirt.jpeg'),
+(2, 'Gants Musculation', 'Gants pour haltérophilie', 19.99, 'uploads/gants.jpeg'),
+(3, 'Bouteille Eau', 'Bouteille deau réutilisable', 12.50, 'uploads/bouteille.jpeg');
+
+
+CREATE TABLE `coach` (
+  `Id_Coach` int(11) NOT NULL,
+  `Nom` varchar(50) NOT NULL,
+  `Prenom` varchar(50) NOT NULL,
+  `Specialite` varchar(50) NOT NULL,
+  `Email` varchar(50) NOT NULL,
+  `Telephone` varchar(15) NOT NULL,
+  `MotDePasse` varchar(255) NOT NULL DEFAULT '1234'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+INSERT INTO `coach` (`Id_Coach`, `Nom`, `Prenom`, `Specialite`, `Email`, `Telephone`, `MotDePasse`) VALUES
+(4, 'Dupont', 'Jean', 'Musculation', 'jean.dupont@example.com', '0600000000', 'mdp123'),
+(5, 'Martin', 'Sophie', 'Yoga', 'sophie.martin@example.com', '0612345678', 'yoga456'),
+(6, 'Lefevre', 'Paul', 'Cardio', 'paul.lefevre@example.com', '0623456789', 'cardio789'),
+(7, 'Dan', 'Marco', 'Yoga', 'dan@gmail.com', '1234', '$2y$10$0rBXwy4180f8H8UnTbqVWuj9yug3mzn3D1TVMse5y67NmPuDGuUK6'),
+(9, 'aaa', 'aaa', 'aaa', 'aaa@gmail.com', '000', '$2y$10$JAxiQoBECAW3.4Q6hL6wb.W5w1v4PnZMrsDySruvX/9iKBEc4ZumK');
+
+
+CREATE TABLE `coachprogramme` (
+  `id` int(11) NOT NULL,
+  `idCoach` int(11) NOT NULL,
+  `idProgramme` int(11) NOT NULL,
+  `date_affectation` date DEFAULT curdate()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+INSERT INTO `coachprogramme` (`id`, `idCoach`, `idProgramme`, `date_affectation`) VALUES
+(1, 4, 1, '2025-04-15'),
+(2, 5, 2, '2025-04-10'),
+(3, 9, 3, '2025-04-12');
+
+
+CREATE TABLE `panier` (
+  `id` int(11) NOT NULL,
+  `id_produit` int(11) NOT NULL,
+  `id_client` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+INSERT INTO `panier` (`id`, `id_produit`, `id_client`) VALUES
+(1, 2, 7);
+
+
+CREATE TABLE `programme` (
+  `id_programme` int(11) NOT NULL,
+  `nom_programme` varchar(50) NOT NULL,
+  `rythme` varchar(50) NOT NULL,
+  `description` text DEFAULT NULL,
+  `duree` time DEFAULT NULL,
+  `categorie` enum('lourd','moyen','simple') NOT NULL,
+  `salle_id` int(11) DEFAULT NULL,
+  `coach_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+INSERT INTO `programme` (`id_programme`, `nom_programme`, `rythme`, `description`, `duree`, `categorie`, `salle_id`, `coach_id`) VALUES
+(1, 'Full Body', 'Quotidien', 'Programme pour tout le corps', '01:00:00', 'moyen', 1, 7),
+(2, 'Yoga Débutant', 'Hebdomadaire', 'Initiation au yoga', '00:45:00', 'simple', NULL, NULL),
+(3, 'HIIT Intensif', 'Quotidien', 'Entraînement cardio intense', '00:30:00', 'lourd', NULL, NULL);
+
+
+CREATE TABLE `reservations` (
+  `id` int(11) NOT NULL,
+  `date_reservation` date NOT NULL,
+  `programme_id` int(11) DEFAULT NULL,
+  `sportif_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+INSERT INTO `reservations` (`id`, `date_reservation`, `programme_id`, `sportif_id`) VALUES
+(2, '2025-05-12', 1, 7),
+(3, '2025-05-14', 3, 7);
+
+
+CREATE TABLE `salles` (
+  `id` int(11) NOT NULL,
+  `nom` varchar(255) NOT NULL,
+  `adresse` varchar(255) NOT NULL,
+  `ville` varchar(255) NOT NULL,
+  `chaine` varchar(255) NOT NULL,
+  `horaire_debut` time DEFAULT NULL,
+  `horaire_fin` time DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+INSERT INTO `salles` (`id`, `nom`, `adresse`, `ville`, `chaine`, `horaire_debut`, `horaire_fin`) VALUES
+(1, 'Basic-Fit Centre', '10 Rue de la République', 'Paris', 'Basic-Fit', '09:00:00', '00:00:00'),
+(2, 'Fitness Park Montreuil', '5 Avenue du Général', 'Montreuil', 'Fitness Park', '09:00:00', '00:00:00');
+
+
+CREATE TABLE `sportif` (
+  `Id_Sportif` int(11) NOT NULL,
+  `Nom` varchar(50) NOT NULL,
+  `Prenom` varchar(50) NOT NULL,
+  `Email` varchar(100) NOT NULL,
+  `Telephone` varchar(20) NOT NULL,
+  `MotDePasse` varchar(255) NOT NULL,
+  `Age` int(3) NOT NULL,
+  `Sexe` enum('Homme','Femme') NOT NULL,
+  `Taille` decimal(5,2) NOT NULL,
+  `Poids` decimal(5,2) NOT NULL,
+  `Objectif` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+INSERT INTO `sportif` (`Id_Sportif`, `Nom`, `Prenom`, `Email`, `Telephone`, `MotDePasse`, `Age`, `Sexe`, `Taille`, `Poids`, `Objectif`) VALUES
+(1, 'Ghotu', 'Daniel', 'daniel.ghotu@fatfitness.com', '0600000001', 'pass1234', 25, 'Homme', 180.00, 75.00, 'Prise de masse'),
+(2, 'Durand', 'Claire', 'claire.durand@fatfitness.com', '0600000002', 'motdepasse', 30, 'Femme', 165.50, 60.00, 'Perte de poids'),
+(3, 'Nguyen', 'Thierry', 'thierry.nguyen@fatfitness.com', '0600000003', 'fit2024', 28, 'Homme', 172.00, 68.00, 'Améliorer l’endurance'),
+(4, 'Moreau', 'Lucie', 'lucie.moreau@fatfitness.com', '0600000004', 'luciepass', 22, 'Femme', 158.00, 55.00, 'Tonification musculaire'),
+(6, 'ngd', 'djen', 'djen@gmail.com', '', '$2y$10$r3GjpYzUzpKEtYhVCrZ4Pe7k.pW.0/8uy5xYpXnTNZxXs8IYjJWsC', 22, '', 1.77, 54.00, 'rien'),
+(7, 'bbb', 'bbb', 'bbb@gmail.com', '', '$2y$10$Bjd.9feCn6se3ctvuioGVeBwm3EZBtDjIGqpRCT6mq91bHXqqeti.', 21, '', 1.74, 90.00, 'bbb');
+
+
+ALTER TABLE `admin`
+  ADD PRIMARY KEY (`idAdmin`),
+  ADD UNIQUE KEY `email` (`email`);
+
+
+ALTER TABLE `boutique`
+  ADD PRIMARY KEY (`id_article`);
+
+
+ALTER TABLE `coach`
+  ADD PRIMARY KEY (`Id_Coach`),
+  ADD UNIQUE KEY `Email` (`Email`);
+
+
+ALTER TABLE `coachprogramme`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idCoach` (`idCoach`),
+  ADD KEY `idProgramme` (`idProgramme`);
+
+
+ALTER TABLE `panier`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_produit` (`id_produit`),
+  ADD KEY `fk_client` (`id_client`);
+
+
+ALTER TABLE `programme`
+  ADD PRIMARY KEY (`id_programme`),
+  ADD KEY `fk_salle` (`salle_id`),
+  ADD KEY `fk_coach` (`coach_id`);
+
+
+ALTER TABLE `reservations`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_programme` (`programme_id`),
+  ADD KEY `fk_sportif` (`sportif_id`);
+
+
+ALTER TABLE `salles`
+  ADD PRIMARY KEY (`id`);
+
+
+ALTER TABLE `sportif`
+  ADD PRIMARY KEY (`Id_Sportif`),
+  ADD UNIQUE KEY `Email` (`Email`);
+
+
+ALTER TABLE `admin`
+  MODIFY `idAdmin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+
+ALTER TABLE `boutique`
+  MODIFY `id_article` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+
+ALTER TABLE `coach`
+  MODIFY `Id_Coach` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+
+ALTER TABLE `coachprogramme`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+
+ALTER TABLE `panier`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+
+ALTER TABLE `programme`
+  MODIFY `id_programme` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+
+ALTER TABLE `reservations`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+
+ALTER TABLE `salles`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+
+ALTER TABLE `sportif`
+  MODIFY `Id_Sportif` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+
+ALTER TABLE `coachprogramme`
+  ADD CONSTRAINT `coachprogramme_ibfk_1` FOREIGN KEY (`idCoach`) REFERENCES `coach` (`Id_Coach`),
+  ADD CONSTRAINT `coachprogramme_ibfk_2` FOREIGN KEY (`idProgramme`) REFERENCES `programme` (`id_programme`);
+
+
+ALTER TABLE `panier`
+  ADD CONSTRAINT `fk_client` FOREIGN KEY (`id_client`) REFERENCES `sportif` (`Id_Sportif`),
+  ADD CONSTRAINT `fk_produit` FOREIGN KEY (`id_produit`) REFERENCES `boutique` (`id_article`);
+
+
+ALTER TABLE `programme`
+  ADD CONSTRAINT `fk_coach` FOREIGN KEY (`coach_id`) REFERENCES `coach` (`Id_Coach`),
+  ADD CONSTRAINT `fk_salle` FOREIGN KEY (`salle_id`) REFERENCES `salles` (`id`);
+
+
+ALTER TABLE `reservations`
+  ADD CONSTRAINT `fk_programme` FOREIGN KEY (`programme_id`) REFERENCES `programme` (`id_programme`),
+  ADD CONSTRAINT `fk_sportif` FOREIGN KEY (`sportif_id`) REFERENCES `sportif` (`Id_Sportif`);
+COMMIT;

@@ -1,4 +1,11 @@
 <?php
+if ($success) {
+    header("Location: ../views/contact.php?success=1");
+    exit();
+} else {
+    header("Location: ../views/contact.php?error=1");
+    exit();
+}
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nom = htmlspecialchars($_POST['nom']);
     $email = htmlspecialchars($_POST['email']);
@@ -19,3 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     header('Location: ../view/accueil.php?message=sent');
     exit;
 }
+$inscription_newsletter = isset($_POST['newsletter']) ? 1 : 0;
+
+?>

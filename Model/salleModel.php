@@ -1,5 +1,5 @@
 <?php
-require_once '../Model/SalleModel.php';
+require_once __DIR__ . '/BaseModel.php';
 
 class SalleModel extends BaseModel
 {
@@ -89,12 +89,16 @@ class SalleModel extends BaseModel
      * @param string|null $search Mot-clé pour la recherche.
      * @return array Résultats correspondant à la recherche.
      */
-    public function searchSalles()
+    public function searchSalles($ville)
     {
-        $sql = "SELECT * FROM salles";
+        $sql = "SELECT * FROM salles where ville= :ville";
         $stmt = self::getPDO()->prepare($sql);
+        $stmt->bindValue(':ville', $ville, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
+
 }
+
 ?>
