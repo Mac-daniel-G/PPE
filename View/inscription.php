@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $specialite = trim($_POST['specialite'] ?? '');
     $age = isset($_POST['age']) ? intval($_POST['age']) : null;
-    $sexe = isset($_POST['sexe']) && in_array($_POST['sexe'], ['H', 'F']) ? $_POST['sexe'] : null;
+    $sexe = isset($_POST['sexe']) && in_array($_POST['sexe'], ['Homme', 'Femme']) ? $_POST['sexe'] : null;
     $taille = isset($_POST['taille']) ? floatval($_POST['taille']) : null;
     $poids = isset($_POST['poids']) ? floatval($_POST['poids']) : null;
     $objectif = trim($_POST['objectif'] ?? '');
@@ -146,8 +146,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="mb-3">
                         <label for="sexe" class="form-label">Sexe</label>
                         <select class="form-select" id="sexe" name="sexe">
-                            <option value="H" <?= $sexe === 'H' ? 'selected' : '' ?>>Homme</option>
-                            <option value="F" <?= $sexe === 'F' ? 'selected' : '' ?>>Femme</option>
+                            <option value="Homme" <?= $sexe === 'Homme' ? 'selected' : '' ?>>Homme</option>
+                            <option value="Femme" <?= $sexe === 'Femme' ? 'selected' : '' ?>>Femme</option>
                         </select>
                     </div>
                     <div class="mb-3">
