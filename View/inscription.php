@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $specialite = trim($_POST['specialite'] ?? '');
     $age = isset($_POST['age']) ? intval($_POST['age']) : null;
-    $sexe = $_POST['sexe'] ?? null;
+    $sexe = isset($_POST['sexe']) && in_array($_POST['sexe'], ['H', 'F']) ? $_POST['sexe'] : null;
     $taille = isset($_POST['taille']) ? floatval($_POST['taille']) : null;
     $poids = isset($_POST['poids']) ? floatval($_POST['poids']) : null;
     $objectif = trim($_POST['objectif'] ?? '');
@@ -176,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 function toggleFields() {
     let role = document.getElementById("role").value;
     document.getElementById("coachFields").style.display = role === "coach" ? "block" : "none";
-    document.getElementById("sportifFields").style.display = role === "cportif" ? "block" : "none";
+    document.getElementById("sportifFields").style.display = role === "sportif" ? "block" : "none";
 }
 document.addEventListener("DOMContentLoaded", toggleFields);
 </script>
