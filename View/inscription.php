@@ -76,16 +76,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $success = "Inscription réussie ! Vous pouvez maintenant vous connecter.";
                 }                                
 
-                if (empty($error)) {
-                    $stmt->bindParam(':nom', $nom);
-                    $stmt->bindParam(':prenom', $prenom);
-                    $stmt->bindParam(':email', $email);
-                    $stmt->bindParam(':telephone', $telephone);
-                    $stmt->bindParam(':motDePasse', $hashedPassword);
-                    $stmt->execute();
+                // if (empty($error)) {
+                //     $stmt->bindParam(':nom', $nom);
+                //     $stmt->bindParam(':prenom', $prenom);
+                //     $stmt->bindParam(':email', $email);
+                //     $stmt->bindParam(':telephone', $telephone);
+                //     $stmt->bindParam(':motDePasse', $hashedPassword);
+                //     $stmt->execute();
 
-                    $success = "Inscription réussie ! Vous pouvez maintenant vous connecter.";
-                }
+                //     $success = "Inscription réussie ! Vous pouvez maintenant vous connecter.";
+                // }
             }
         } catch (PDOException $e) {
             $error = "Erreur lors de l'inscription : " . $e->getMessage();
