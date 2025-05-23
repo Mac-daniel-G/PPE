@@ -33,12 +33,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         try {
             // Vérifier si l'email existe déjà dans Coach ou Sportif
-            $stmt = $pdo->prepare('SELECT COUNT(*) FROM Coach WHERE Email = :email');
+            $stmt = $pdo->prepare('SELECT COUNT(*) FROM coach WHERE Email = :email');
             $stmt->bindParam(':email', $email);
             $stmt->execute();
             $coachExists = $stmt->fetchColumn();
 
-            $stmt = $pdo->prepare('SELECT COUNT(*) FROM Sportif WHERE Email = :email');
+            $stmt = $pdo->prepare('SELECT COUNT(*) FROM sportif WHERE Email = :email');
             $stmt->bindParam(':email', $email);
             $stmt->execute();
             $sportifExists = $stmt->fetchColumn();
@@ -48,8 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $hashedPassword = password_hash($motDePasse, PASSWORD_DEFAULT);
 
-                if ($role === 'Coach') {
-                    $stmt = $pdo->prepare('INSERT INTO Coach (Nom, Prenom, Specialite, Email, Telephone, motDePasse) 
+                if ($role === 'coach') {
+                    $stmt = $pdo->prepare('INSERT INTO coach (Nom, Prenom, Specialite, Email, Telephone, motDePasse) 
                                            VALUES (:nom, :prenom, :specialite, :email, :telephone, :motDePasse)');
                     $stmt->bindParam(':nom', $nom);
                     $stmt->bindParam(':prenom', $prenom);
@@ -60,8 +60,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmt->execute();
                     $success = "Inscription réussie ! Vous pouvez maintenant vous connecter.";
                     
-                } elseif ($role === 'Sportif') {
-                    $stmt = $pdo->prepare('INSERT INTO Sportif (Nom, Prenom, Age, Sexe, Taille, Poids, Objectif, Email, motDePasse) 
+                } elseif ($role === 'sportif') {
+                    $stmt = $pdo->prepare('INSERT INTO sportif (Nom, Prenom, Age, Sexe, Taille, Poids, Objectif, Email, motDePasse) 
                                            VALUES (:nom, :prenom, :age, :sexe, :taille, :poids, :objectif, :email, :motDePasse)');
                     $stmt->bindParam(':nom', $nom);
                     $stmt->bindParam(':prenom', $prenom);
