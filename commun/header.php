@@ -40,12 +40,12 @@ var_dump($_SESSION);
                         <li class="nav-item"><a class="nav-link active" href="index.php?page=connexion">Connexion</a></li>
                     <?php else: ?>
                         <!-- L'utilisateur est connecté -->
-                        <?php if ($_SESSION['user_role'] === 'Sportif'): ?>
+                        <?php if ($_SESSION['user_role'] === 'sportif'): ?>
                             <li class="nav-item"><a class="nav-link active" href="index.php?page=programme">Programmes</a></li>
                             <li class="nav-item"><a class="nav-link active" href="index.php?page=salle">Salles</a></li>
                             <li class="nav-item"><a class="nav-link active" href="index.php?page=boutique">Boutique</a></li>
                             <li class="nav-item"><a class="nav-link active" href="index.php?page=contact">Contact</a></li>
-                        <?php elseif ($_SESSION['user_role'] === 'Coach'): ?>
+                        <?php elseif ($_SESSION['user_role'] === 'coach'): ?>
                             <li class="nav-item"><a class="nav-link active" href="index.php?page=mesRendeVous">Mes Rendez-Vous</a></li>
                             <li class="nav-item"><a class="nav-link active" href="index.php?page=contact">Contact</a></li>
                         <?php endif; ?>

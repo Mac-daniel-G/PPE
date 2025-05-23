@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Les mots de passe ne correspondent pas.";
     } else {
         try {
-            // Vérifier si l'email existe déjà dans Coach ou Sportif
+            // Vérifier si l'email existe déjà dans coach ou Sportif
             $stmt = $pdo->prepare('SELECT COUNT(*) FROM coach WHERE Email = :email');
             $stmt->bindParam(':email', $email);
             $stmt->execute();
@@ -135,8 +135,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label for="role" class="form-label">Vous êtes :</label>
                     <select class="form-select" id="role" name="role" required onchange="toggleFields()">
                         <option value="">Sélectionnez</option>
-                        <option value="Sportif" <?= ($role === 'Sportif') ? 'selected' : '' ?>>Sportif</option>
-                        <option value="Coach" <?= ($role === 'Coach') ? 'selected' : '' ?>>Coach</option>
+                        <option value="sportif" <?= ($role === 'sportif') ? 'selected' : '' ?>>Sportif</option>
+                        <option value="coach" <?= ($role === 'coach') ? 'selected' : '' ?>>Coach</option>
                     </select>
                 </div>
 
@@ -184,8 +184,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <script>
 function toggleFields() {
     let role = document.getElementById("role").value;
-    document.getElementById("coachFields").style.display = role === "Coach" ? "block" : "none";
-    document.getElementById("sportifFields").style.display = role === "Sportif" ? "block" : "none";
+    document.getElementById("coachFields").style.display = role === "coach" ? "block" : "none";
+    document.getElementById("sportifFields").style.display = role === "cportif" ? "block" : "none";
 }
 document.addEventListener("DOMContentLoaded", toggleFields);
 </script>

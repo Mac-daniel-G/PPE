@@ -13,7 +13,7 @@ CREATE TABLE `admin` (
   `email` varchar(100) NOT NULL,
   `mdp` varchar(255) NOT NULL,
   `tel` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+); 
 
 
 INSERT INTO `admin` (`idAdmin`, `nom`, `prenom`, `role`, `email`, `mdp`, `tel`) VALUES
@@ -27,7 +27,7 @@ CREATE TABLE `boutique` (
   `description_article` varchar(100) NOT NULL,
   `prix_article` decimal(10,2) NOT NULL,
   `image_article` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+);
 
 
 INSERT INTO `boutique` (`id_article`, `nom_article`, `description_article`, `prix_article`, `image_article`) VALUES
@@ -44,8 +44,7 @@ CREATE TABLE `coach` (
   `Email` varchar(50) NOT NULL,
   `Telephone` varchar(15) NOT NULL,
   `MotDePasse` varchar(255) NOT NULL DEFAULT '1234'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
+);
 
 INSERT INTO `coach` (`Id_Coach`, `Nom`, `Prenom`, `Specialite`, `Email`, `Telephone`, `MotDePasse`) VALUES
 (4, 'Dupont', 'Jean', 'Musculation', 'jean.dupont@example.com', '0600000000', 'mdp123'),
@@ -60,7 +59,7 @@ CREATE TABLE `coachprogramme` (
   `idCoach` int(11) NOT NULL,
   `idProgramme` int(11) NOT NULL,
   `date_affectation` date DEFAULT curdate()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ;
 
 
 INSERT INTO `coachprogramme` (`id`, `idCoach`, `idProgramme`, `date_affectation`) VALUES
@@ -73,7 +72,7 @@ CREATE TABLE `panier` (
   `id` int(11) NOT NULL,
   `id_produit` int(11) NOT NULL,
   `id_client` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ;
 
 
 INSERT INTO `panier` (`id`, `id_produit`, `id_client`) VALUES
@@ -89,7 +88,7 @@ CREATE TABLE `programme` (
   `categorie` enum('lourd','moyen','simple') NOT NULL,
   `salle_id` int(11) DEFAULT NULL,
   `coach_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ;
 
 
 INSERT INTO `programme` (`id_programme`, `nom_programme`, `rythme`, `description`, `duree`, `categorie`, `salle_id`, `coach_id`) VALUES
@@ -103,7 +102,7 @@ CREATE TABLE `reservations` (
   `date_reservation` date NOT NULL,
   `programme_id` int(11) DEFAULT NULL,
   `sportif_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ;
 
 
 INSERT INTO `reservations` (`id`, `date_reservation`, `programme_id`, `sportif_id`) VALUES
@@ -119,7 +118,7 @@ CREATE TABLE `salles` (
   `chaine` varchar(255) NOT NULL,
   `horaire_debut` time DEFAULT NULL,
   `horaire_fin` time DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ;
 
 
 INSERT INTO `salles` (`id`, `nom`, `adresse`, `ville`, `chaine`, `horaire_debut`, `horaire_fin`) VALUES
@@ -139,7 +138,7 @@ CREATE TABLE `sportif` (
   `Taille` decimal(5,2) NOT NULL,
   `Poids` decimal(5,2) NOT NULL,
   `Objectif` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ;
 
 
 INSERT INTO `sportif` (`Id_Sportif`, `Nom`, `Prenom`, `Email`, `Telephone`, `MotDePasse`, `Age`, `Sexe`, `Taille`, `Poids`, `Objectif`) VALUES
