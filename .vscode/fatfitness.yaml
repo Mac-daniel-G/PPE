@@ -1,19 +1,19 @@
-COACH (Id_Coach, Nom, Prenom, Specialite, Email, Telephone, Mot_de_passe)
-→ PK : Id_Coach
+coach (Id_coach, Nom, Prenom, Specialite, Email, Telephone, Mot_de_passe)
+→ PK : Id_coach
 
-SPORTIF (Id_Sportif, Nom, Prenom, Age, Email, Mot_de_passe, Sexe, Taille, Poids, Objectif, Id_Coach)
-→ PK : Id_Sportif
-→ FK : Id_Coach → COACH
+sportif (Id_sportif, Nom, Prenom, Age, Email, Mot_de_passe, Sexe, Taille, Poids, Objectif, Id_coach)
+→ PK : Id_sportif
+→ FK : Id_coach → coach
 
 PROGRAMME (id_programme, nom_programme, rythme, description, duree, categorie)
 → PK : id_programme
 
-SPORTIFPROGRAMME (id, idSportif, idProgramme, date_souscription)
+sportifPROGRAMME (id, idsportif, idProgramme, date_souscription)
 → PK : id
-→ FK : idSportif → SPORTIF
+→ FK : idsportif → sportif
 → FK : idProgramme → PROGRAMME
 
-COACHPROGRAMME (id, idCoach, idProgramme)
+coachPROGRAMME (id, idcoach, idProgramme)
 → PK : id
-→ FK : idCoach → COACH
+→ FK : idcoach → coach
 → FK : idProgramme → PROGRAMME

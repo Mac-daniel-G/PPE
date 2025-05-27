@@ -21,7 +21,7 @@ try {
            c.Prenom AS prenom_coach,
            s.nom AS nom_salle
     FROM programme p
-    LEFT JOIN Coach c ON p.coach_id = c.Id_Coach
+    LEFT JOIN coach c ON p.coach_id = c.Id_coach
     LEFT JOIN salles s ON p.salle_id = s.id
 ";
 
@@ -58,7 +58,7 @@ try {
                     <p class="card-text"><?= htmlspecialchars($programme['description']); ?></p>
                     <p><strong>Durée :</strong> <?= htmlspecialchars($programme['duree']); ?></p>
                     <p><strong>Catégorie :</strong> <?= htmlspecialchars($programme['categorie']); ?></p>
-                    <p><strong>Coach :</strong> <?= htmlspecialchars($programme['nom_coach'] . ' ' . $programme['prenom_coach']); ?></p>
+                    <p><strong>coach :</strong> <?= htmlspecialchars($programme['nom_coach'] . ' ' . $programme['prenom_coach']); ?></p>
                     <p><strong>Salle :</strong> <?= htmlspecialchars($programme['nom_salle']); ?></p>
                     
                     

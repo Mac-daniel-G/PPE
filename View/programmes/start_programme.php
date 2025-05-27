@@ -10,7 +10,7 @@ if (isset($_SESSION['user_id']) && $_SESSION['user_id'] !== NULL) {
     $sportif_id = $_SESSION['user_id']; // Récupère l'ID de l'utilisateur connecté
 
     // Vérifie si l'ID sportif existe dans la table 'sportif'
-    $stmt = $pdo->prepare("SELECT Id_Sportif FROM sportif WHERE Id_Sportif = ?");
+    $stmt = $pdo->prepare("SELECT Id_sportif FROM sportif WHERE Id_sportif = ?");
     $stmt->execute([$sportif_id]);
     $sportif_exists = $stmt->fetchColumn();
 

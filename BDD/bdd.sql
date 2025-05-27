@@ -1,9 +1,12 @@
 
+DROP database IF EXISTS  fatfitness_db;
+CREATE database fatfitness_db;
+USE fatfitness_db;
+
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
-
 
 CREATE TABLE `admin` (
   `idAdmin` int(11) NOT NULL,
@@ -13,8 +16,7 @@ CREATE TABLE `admin` (
   `email` varchar(100) NOT NULL,
   `mdp` varchar(255) NOT NULL,
   `tel` varchar(20) NOT NULL
-); 
-
+) ;
 
 INSERT INTO `admin` (`idAdmin`, `nom`, `prenom`, `role`, `email`, `mdp`, `tel`) VALUES
 (1, 'Ghotu', 'Mac Daniel', 'Super Admin', 'admin@fatfitness.com', '000', '0123456789'),
@@ -27,7 +29,7 @@ CREATE TABLE `boutique` (
   `description_article` varchar(100) NOT NULL,
   `prix_article` decimal(10,2) NOT NULL,
   `image_article` varchar(200) NOT NULL
-);
+) ;
 
 
 INSERT INTO `boutique` (`id_article`, `nom_article`, `description_article`, `prix_article`, `image_article`) VALUES
@@ -37,32 +39,32 @@ INSERT INTO `boutique` (`id_article`, `nom_article`, `description_article`, `pri
 
 
 CREATE TABLE `coach` (
-  `Id_Coach` int(11) NOT NULL,
+  `Id_coach` int(11) NOT NULL,
   `Nom` varchar(50) NOT NULL,
   `Prenom` varchar(50) NOT NULL,
   `Specialite` varchar(50) NOT NULL,
   `Email` varchar(50) NOT NULL,
   `Telephone` varchar(15) NOT NULL,
   `MotDePasse` varchar(255) NOT NULL DEFAULT '1234'
-);
+) ;
 
-INSERT INTO `coach` (`Id_Coach`, `Nom`, `Prenom`, `Specialite`, `Email`, `Telephone`, `MotDePasse`) VALUES
+
+INSERT INTO `coach` (`Id_coach`, `Nom`, `Prenom`, `Specialite`, `Email`, `Telephone`, `MotDePasse`) VALUES
 (4, 'Dupont', 'Jean', 'Musculation', 'jean.dupont@example.com', '0600000000', 'mdp123'),
 (5, 'Martin', 'Sophie', 'Yoga', 'sophie.martin@example.com', '0612345678', 'yoga456'),
-(6, 'Lefevre', 'Paul', 'Cardio', 'paul.lefevre@example.com', '0623456789', 'cardio789'),
 (7, 'Dan', 'Marco', 'Yoga', 'dan@gmail.com', '1234', '$2y$10$0rBXwy4180f8H8UnTbqVWuj9yug3mzn3D1TVMse5y67NmPuDGuUK6'),
-(9, 'aaa', 'aaa', 'aaa', 'aaa@gmail.com', '000', '$2y$10$JAxiQoBECAW3.4Q6hL6wb.W5w1v4PnZMrsDySruvX/9iKBEc4ZumK');
-
+(9, 'aaa', 'aaa', 'aaa', 'aaa@gmail.com', '000', '$2y$10$JAxiQoBECAW3.4Q6hL6wb.W5w1v4PnZMrsDySruvX/9iKBEc4ZumK');*$
+*
 
 CREATE TABLE `coachprogramme` (
   `id` int(11) NOT NULL,
-  `idCoach` int(11) NOT NULL,
+  `idcoach` int(11) NOT NULL,
   `idProgramme` int(11) NOT NULL,
   `date_affectation` date DEFAULT curdate()
 ) ;
 
 
-INSERT INTO `coachprogramme` (`id`, `idCoach`, `idProgramme`, `date_affectation`) VALUES
+INSERT INTO `coachprogramme` (`id`, `idcoach`, `idProgramme`, `date_affectation`) VALUES
 (1, 4, 1, '2025-04-15'),
 (2, 5, 2, '2025-04-10'),
 (3, 9, 3, '2025-04-12');
@@ -75,8 +77,8 @@ CREATE TABLE `panier` (
 ) ;
 
 
-INSERT INTO `panier` (`id`, `id_produit`, `id_client`) VALUES
-(1, 2, 7);
+INSERT INTO `panier` (`id`, `id_produit`, `id_client`) VALUES(1, 2, 7),
+(2, 1, 9);
 
 
 CREATE TABLE `programme` (
@@ -94,7 +96,8 @@ CREATE TABLE `programme` (
 INSERT INTO `programme` (`id_programme`, `nom_programme`, `rythme`, `description`, `duree`, `categorie`, `salle_id`, `coach_id`) VALUES
 (1, 'Full Body', 'Quotidien', 'Programme pour tout le corps', '01:00:00', 'moyen', 1, 7),
 (2, 'Yoga Débutant', 'Hebdomadaire', 'Initiation au yoga', '00:45:00', 'simple', NULL, NULL),
-(3, 'HIIT Intensif', 'Quotidien', 'Entraînement cardio intense', '00:30:00', 'lourd', NULL, NULL);
+(3, 'HIIT Intensif', 'Quotidien', 'Entraînement cardio intense', '00:30:00', 'lourd', NULL, NULL),
+(4, 'Natation', 'Hebdomadaire', 'Apprends a nager sans  étant principalement chez toi ', '00:40:00', 'simple', 2, NULL);
 
 
 CREATE TABLE `reservations` (
@@ -107,7 +110,8 @@ CREATE TABLE `reservations` (
 
 INSERT INTO `reservations` (`id`, `date_reservation`, `programme_id`, `sportif_id`) VALUES
 (2, '2025-05-12', 1, 7),
-(3, '2025-05-14', 3, 7);
+(3, '2025-05-14', 3, 7),
+(4, '2025-05-14', 1, 9);
 
 
 CREATE TABLE `salles` (
@@ -127,7 +131,7 @@ INSERT INTO `salles` (`id`, `nom`, `adresse`, `ville`, `chaine`, `horaire_debut`
 
 
 CREATE TABLE `sportif` (
-  `Id_Sportif` int(11) NOT NULL,
+  `Id_sportif` int(11) NOT NULL,
   `Nom` varchar(50) NOT NULL,
   `Prenom` varchar(50) NOT NULL,
   `Email` varchar(100) NOT NULL,
@@ -141,13 +145,11 @@ CREATE TABLE `sportif` (
 ) ;
 
 
-INSERT INTO `sportif` (`Id_Sportif`, `Nom`, `Prenom`, `Email`, `Telephone`, `MotDePasse`, `Age`, `Sexe`, `Taille`, `Poids`, `Objectif`) VALUES
-(1, 'Ghotu', 'Daniel', 'daniel.ghotu@fatfitness.com', '0600000001', 'pass1234', 25, 'Homme', 180.00, 75.00, 'Prise de masse'),
-(2, 'Durand', 'Claire', 'claire.durand@fatfitness.com', '0600000002', 'motdepasse', 30, 'Femme', 165.50, 60.00, 'Perte de poids'),
-(3, 'Nguyen', 'Thierry', 'thierry.nguyen@fatfitness.com', '0600000003', 'fit2024', 28, 'Homme', 172.00, 68.00, 'Améliorer l’endurance'),
-(4, 'Moreau', 'Lucie', 'lucie.moreau@fatfitness.com', '0600000004', 'luciepass', 22, 'Femme', 158.00, 55.00, 'Tonification musculaire'),
+INSERT INTO `sportif` (`Id_sportif`, `Nom`, `Prenom`, `Email`, `Telephone`, `MotDePasse`, `Age`, `Sexe`, `Taille`, `Poids`, `Objectif`) VALUES
 (6, 'ngd', 'djen', 'djen@gmail.com', '', '$2y$10$r3GjpYzUzpKEtYhVCrZ4Pe7k.pW.0/8uy5xYpXnTNZxXs8IYjJWsC', 22, '', 1.77, 54.00, 'rien'),
-(7, 'bbb', 'bbb', 'bbb@gmail.com', '', '$2y$10$Bjd.9feCn6se3ctvuioGVeBwm3EZBtDjIGqpRCT6mq91bHXqqeti.', 21, '', 1.74, 90.00, 'bbb');
+(7, 'bbb', 'bbb', 'bbb@gmail.com', '', '$2y$10$Bjd.9feCn6se3ctvuioGVeBwm3EZBtDjIGqpRCT6mq91bHXqqeti.', 21, '', 1.74, 90.00, 'bbb'),
+(8, 'SINHOU', 'Reuben', 'magreub6@gmail.com', '', '$2y$10$V5je0PRDCLs7GcXjtIhlF.K/Swv1ar7BJZwPzCwdMwarJ/EAULbwS', 18, '', 1.74, 60.00, 'Musculation'),
+(9, 'SINHOU', 'Reuben', 'reubenmag6@gmail.com', '', '$2y$10$pTm3MolFAX6euQYIyuAEg.hBvWBmNc05P1cIXHgJkdR1VZk7rCamC', 18, '', 1.74, 60.00, 'Musculation');
 
 
 ALTER TABLE `admin`
@@ -160,13 +162,13 @@ ALTER TABLE `boutique`
 
 
 ALTER TABLE `coach`
-  ADD PRIMARY KEY (`Id_Coach`),
+  ADD PRIMARY KEY (`Id_coach`),
   ADD UNIQUE KEY `Email` (`Email`);
 
 
 ALTER TABLE `coachprogramme`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `idCoach` (`idCoach`),
+  ADD KEY `idcoach` (`idcoach`),
   ADD KEY `idProgramme` (`idProgramme`);
 
 
@@ -193,7 +195,7 @@ ALTER TABLE `salles`
 
 
 ALTER TABLE `sportif`
-  ADD PRIMARY KEY (`Id_Sportif`),
+  ADD PRIMARY KEY (`Id_sportif`),
   ADD UNIQUE KEY `Email` (`Email`);
 
 
@@ -206,7 +208,7 @@ ALTER TABLE `boutique`
 
 
 ALTER TABLE `coach`
-  MODIFY `Id_Coach` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `Id_coach` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 
 ALTER TABLE `coachprogramme`
@@ -214,15 +216,15 @@ ALTER TABLE `coachprogramme`
 
 
 ALTER TABLE `panier`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 
 ALTER TABLE `programme`
-  MODIFY `id_programme` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_programme` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 
 ALTER TABLE `reservations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 
 ALTER TABLE `salles`
@@ -230,25 +232,25 @@ ALTER TABLE `salles`
 
 
 ALTER TABLE `sportif`
-  MODIFY `Id_Sportif` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `Id_sportif` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 
 ALTER TABLE `coachprogramme`
-  ADD CONSTRAINT `coachprogramme_ibfk_1` FOREIGN KEY (`idCoach`) REFERENCES `coach` (`Id_Coach`),
+  ADD CONSTRAINT `coachprogramme_ibfk_1` FOREIGN KEY (`idcoach`) REFERENCES `coach` (`Id_coach`),
   ADD CONSTRAINT `coachprogramme_ibfk_2` FOREIGN KEY (`idProgramme`) REFERENCES `programme` (`id_programme`);
 
 
 ALTER TABLE `panier`
-  ADD CONSTRAINT `fk_client` FOREIGN KEY (`id_client`) REFERENCES `sportif` (`Id_Sportif`),
+  ADD CONSTRAINT `fk_client` FOREIGN KEY (`id_client`) REFERENCES `sportif` (`Id_sportif`),
   ADD CONSTRAINT `fk_produit` FOREIGN KEY (`id_produit`) REFERENCES `boutique` (`id_article`);
 
 
 ALTER TABLE `programme`
-  ADD CONSTRAINT `fk_coach` FOREIGN KEY (`coach_id`) REFERENCES `coach` (`Id_Coach`),
+  ADD CONSTRAINT `fk_coach` FOREIGN KEY (`coach_id`) REFERENCES `coach` (`Id_coach`),
   ADD CONSTRAINT `fk_salle` FOREIGN KEY (`salle_id`) REFERENCES `salles` (`id`);
 
 
 ALTER TABLE `reservations`
   ADD CONSTRAINT `fk_programme` FOREIGN KEY (`programme_id`) REFERENCES `programme` (`id_programme`),
-  ADD CONSTRAINT `fk_sportif` FOREIGN KEY (`sportif_id`) REFERENCES `sportif` (`Id_Sportif`);
+  ADD CONSTRAINT `fk_sportif` FOREIGN KEY (`sportif_id`) REFERENCES `sportif` (`Id_sportif`);
 COMMIT;

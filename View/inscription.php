@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Les mots de passe ne correspondent pas.";
     } else {
         try {
-            // Vérifier si l'email existe déjà dans coach ou Sportif
+            // Vérifier si l'email existe déjà dans coach ou sportif
             $stmt = $pdo->prepare('SELECT COUNT(*) FROM coach WHERE Email = :email');
             $stmt->bindParam(':email', $email);
             $stmt->execute();
@@ -126,8 +126,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label for="role" class="form-label">Vous êtes :</label>
                     <select class="form-select" id="role" name="role" required onchange="toggleFields()">
                         <option value="">Sélectionnez</option>
-                        <option value="sportif" <?= ($role === 'sportif') ? 'selected' : '' ?>>Sportif</option>
-                        <option value="coach" <?= ($role === 'coach') ? 'selected' : '' ?>>Coach</option>
+                        <option value="sportif" <?= ($role === 'sportif') ? 'selected' : '' ?>>sportif</option>
+                        <option value="coach" <?= ($role === 'coach') ? 'selected' : '' ?>>coach</option>
                     </select>
                 </div>
 

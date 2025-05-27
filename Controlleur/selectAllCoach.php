@@ -7,7 +7,7 @@ header('Content-Type: application/json');
 
 try {
     // Appeler la méthode pour récupérer tous les coachs
-    $coaches = CoachController::getAllCoaches();
+    $coaches = coachController::getAllcoaches();
 
     // Vérifier si des coachs ont été trouvés
     if (!empty($coaches)) {

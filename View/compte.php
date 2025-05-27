@@ -12,16 +12,16 @@ $user_role = $_SESSION['user_role'];
 
 // Récupération des infos utilisateur
 $stmt = $pdo->prepare(
-    $user_role === 'Sportif' ? 
-    "SELECT * FROM Sportif WHERE Id_Sportif = ?" : 
-    "SELECT * FROM Coach WHERE Id_Coach = ?"
+    $user_role === 'sportif' ? 
+    "SELECT * FROM sportif WHERE Id_sportif = ?" : 
+    "SELECT * FROM coach WHERE Id_coach = ?"
 );
 $stmt->execute([$user_id]);
 $user_info = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Réservations (si Sportif)
+// Réservations (si sportif)
 $reservations = [];
-if ($user_role === 'Sportif') {
+if ($user_role === 'sportif') {
     $stmt = $pdo->prepare("
         SELECT r.date_reservation, p.nom_programme, p.description 
         FROM reservations r
@@ -46,7 +46,7 @@ if ($user_role === 'Sportif') {
     <div class="jumbotron text-center bg-light p-5 mb-4 rounded">
         <h1 class="display-5">Bienvenue <?= htmlspecialchars($user_info['Nom'] . ' ' . $user_info['Prenom']) ?></h1>
         <p class="lead">Votre espace personnel dédié à votre bien-être sportif.</p>
-        <?php if ($_SESSION['user_role'] === 'Coach'): ?>
+        <?php if ($_SESSION['user_role'] === 'coach'): ?>
             <a href="index.php?page=creeProgramme" class="btn btn-primary mt-3">Créer ton programme</a>
         <?php else: ?>
             <a href="index.php?page=programme" class="btn btn-primary mt-3">Découvrir nos programmes</a>
@@ -62,7 +62,7 @@ if ($user_role === 'Sportif') {
             <p><strong>Rôle :</strong> <?= htmlspecialchars($user_role) ?></p>
         </div>
 
-        <?php if ($user_role === 'Sportif'): ?>
+        <?php if ($user_role === 'sportif'): ?>
             <div class="profile-card">
                 <h2 class="mb-3">Mes Réservations</h2>
                 <?php if (!empty($reservations)): ?>

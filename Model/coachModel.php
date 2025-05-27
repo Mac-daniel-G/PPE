@@ -3,19 +3,19 @@
 require_once 'BaseModel.php';
 
 /**
- * Modèle pour les entraîneurs (Coach)
+ * Modèle pour les entraîneurs (coach)
  */
-class CoachModel extends BaseModel {
+class coachModel extends BaseModel {
     /**
      * Récupère tous les entraîneurs dans la base de données
      *
      * @return array Liste des entraîneurs sous forme de tableau associatif
      * @throws PDOException En cas d'erreur lors de l'exécution de la requête
      */
-    public static function fetchAllCoaches() {
+    public static function fetchAllcoaches() {
         try {
             // Préparer la requête pour plus de sécurité
-            $stmt = self::$pdo->prepare("SELECT * FROM Coach");
+            $stmt = self::$pdo->prepare("SELECT * FROM coach");
             $stmt->execute();
 
             // Retourner les résultats sous forme d'un tableau associatif
@@ -32,10 +32,10 @@ class CoachModel extends BaseModel {
      * @param int $id L'identifiant de l'entraîneur
      * @return array|null Les informations de l'entraîneur ou null s'il n'existe pas
      */
-    public static function fetchCoachById($id) {
+    public static function fetchcoachById($id) {
         try {
             // Préparer la requête avec un paramètre
-            $stmt = self::$pdo->prepare("SELECT * FROM Coach WHERE Id_Coach = :id");
+            $stmt = self::$pdo->prepare("SELECT * FROM coach WHERE Id_coach = :id");
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
 
@@ -53,11 +53,11 @@ class CoachModel extends BaseModel {
      * @param string $matricule Le matricule de l'entraîneur
      * @return bool Succès ou échec de l'insertion
      */
-    public static function addCoach($specialite, $matricule) {
+    public static function addcoach($specialite, $matricule) {
         try {
             // Préparer la requête d'insertion
             $stmt = self::$pdo->prepare("
-                INSERT INTO Coach (Specialité, Maticule) 
+                INSERT INTO coach (Specialité, Maticule) 
                 VALUES (:specialite, :matricule)
             ");
             $stmt->bindParam(':specialite', $specialite, PDO::PARAM_STR);
@@ -76,10 +76,10 @@ class CoachModel extends BaseModel {
      * @param int $id L'identifiant de l'entraîneur
      * @return bool Succès ou échec de la suppression
      */
-    public static function deleteCoachById($id) {
+    public static function deletecoachById($id) {
         try {
             // Préparer la requête de suppression
-            $stmt = self::$pdo->prepare("DELETE FROM Coach WHERE Id_Coach = :id");
+            $stmt = self::$pdo->prepare("DELETE FROM coach WHERE Id_coach = :id");
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
             // Exécuter la requête

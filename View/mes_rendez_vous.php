@@ -3,7 +3,7 @@ include_once __DIR__ . '/../commun/header.php';
 require_once __DIR__ . '/../BDD/database.php';
 
 // Vérifie que l'utilisateur est un coach connecté
-if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'Coach') {
+if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'coach') {
     header('Location: ../pages/connexion.php');
     exit();
 }
@@ -25,7 +25,7 @@ $stmt = $pdo->prepare("
            p.nom_programme
     FROM reservations r
     JOIN programme p ON r.programme_id = p.id_programme
-    JOIN sportif s ON r.sportif_id = s.Id_Sportif
+    JOIN sportif s ON r.sportif_id = s.Id_sportif
     WHERE p.id_coach = ?
     ORDER BY r.date_reservation DESC
 ");
@@ -45,7 +45,7 @@ $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <thead class="table-dark">
                 <tr>
                     <th>Programme</th>
-                    <th>Sportif</th>
+                    <th>sportif</th>
                     <th>Date de réservation</th>
                     <th>Action</th>
                 </tr>

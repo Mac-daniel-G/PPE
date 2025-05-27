@@ -16,14 +16,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($email && $password) {
         try {
-            // Rechercher d'abord dans la table Sportif
+            // Rechercher d'abord dans la table sportif
             $stmt = $pdo->prepare('SELECT *, "sportif" as Role FROM sportif WHERE Email = :email');
             $stmt->bindParam(':email', $email);
             $stmt->execute();
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
            
 
-            // Si non trouvé, chercher dans la table Coach
+            // Si non trouvé, chercher dans la table coach
             if (!$user) {
                 $stmt = $pdo->prepare('SELECT *, "coach" as Role FROM coach WHERE Email = :email');
                 $stmt->bindParam(':email', $email);
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Si un utilisateur est trouvé et que le mot de passe est correct
             if ($user && password_verify($password, $user['MotDePasse'])) {
                 // Connexion réussie
-                $_SESSION['user_id'] = $user['Role'] === 'sportif' ? $user['Id_Sportif'] : $user['Id_Coach'];
+                $_SESSION['user_id'] = $user['Role'] === 'sportif' ? $user['Id_sportif'] : $user['Id_coach'];
                 $_SESSION['user_name'] = $user['Nom'] . ' ' . $user['Prenom'];
                 $_SESSION['user_role'] = $user['Role'];
 

@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     try {
         $stmt = $pdo->prepare("INSERT INTO programme (nom_programme, rythme, description, duree, categorie, salle_id, coach_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$nom_programme, $rythme, $description, $duree, $categorie, $salle_id, $idCoach]);
+        $stmt->execute([$nom_programme, $rythme, $description, $duree, $categorie, $salle_id, $idcoach]);
         $message = "Programme créé avec succès !";
     } catch (PDOException $e) {
         $message = "Erreur : " . $e->getMessage();
@@ -36,7 +36,7 @@ $programmes = $pdo->prepare("SELECT * FROM programme WHERE coach_id = ?");
 </head>
 <body>
     <div class="jumbotron text-center bg-light p-5 mb-4 rounded">
-        <h1>Bonjour Coach <?= htmlspecialchars($coach['Prenom']) ?> <?= htmlspecialchars($coach['Nom']) ?> !</h1>
+        <h1>Bonjour coach <?= htmlspecialchars($coach['Prenom']) ?> <?= htmlspecialchars($coach['Nom']) ?> !</h1>
         <p>Vous êtes un coach particulier chez FatFitness spécialisé en <strong><?= htmlspecialchars($coach['Specialite']) ?></strong>. Merci de votre engagement 💪</p>
 
         <h2>Créer un nouveau programme</h2>
