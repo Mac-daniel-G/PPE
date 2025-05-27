@@ -53,8 +53,7 @@ INSERT INTO `coach` (`Id_coach`, `Nom`, `Prenom`, `Specialite`, `Email`, `Teleph
 (4, 'Dupont', 'Jean', 'Musculation', 'jean.dupont@example.com', '0600000000', 'mdp123'),
 (5, 'Martin', 'Sophie', 'Yoga', 'sophie.martin@example.com', '0612345678', 'yoga456'),
 (7, 'Dan', 'Marco', 'Yoga', 'dan@gmail.com', '1234', '$2y$10$0rBXwy4180f8H8UnTbqVWuj9yug3mzn3D1TVMse5y67NmPuDGuUK6'),
-(9, 'aaa', 'aaa', 'aaa', 'aaa@gmail.com', '000', '$2y$10$JAxiQoBECAW3.4Q6hL6wb.W5w1v4PnZMrsDySruvX/9iKBEc4ZumK');*$
-*
+(9, 'aaa', 'aaa', 'aaa', 'aaa@gmail.com', '000', '$2y$10$JAxiQoBECAW3.4Q6hL6wb.W5w1v4PnZMrsDySruvX/9iKBEc4ZumK');
 
 CREATE TABLE `coachprogramme` (
   `id` int(11) NOT NULL,
