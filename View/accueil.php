@@ -26,7 +26,7 @@ include_once __DIR__ . '/../commun/header.php';
         <div class="row mt-4">
             <div class="col-md-4">
                 <div class="card">
-                    <img src="/GitHub/ClientLegerBTS/assets/img/programme/programme1.jpg" class="card-img-top" alt="Programme Cardio">
+                    <img src="assets/img/programme/programme1.jpg" class="card-img-top" alt="Programme Cardio">
                     <div class="card-body">
                         <h5 class="card-title">Programme Cardio</h5>
                         <p class="card-text">Boostez votre endurance et brûlez des calories efficacement.</p>
@@ -36,7 +36,7 @@ include_once __DIR__ . '/../commun/header.php';
             </div>
             <div class="col-md-4">
                 <div class="card">
-                    <img src="/GitHub/ClientLegerBTS/assets/img/programme/crossfit1.webp" class="card-img-top" alt="Programme CrossFit">
+                    <img src="assets/img/programme/crossfit1.webp" class="card-img-top" alt="Programme CrossFit">
                     <div class="card-body">
                         <h5 class="card-title">Programme CrossFit</h5>
                         <p class="card-text">Entraînez tout votre corps avec des mouvements intenses.</p>
@@ -46,7 +46,7 @@ include_once __DIR__ . '/../commun/header.php';
             </div>
             <div class="col-md-4">
                 <div class="card">
-                    <img src="/GitHub/ClientLegerBTS/assets/img/programme/programme2.jpg" class="card-img-top" alt="Programme Musculation">
+                    <img src="assets/img/programme/programme2.jpg" class="card-img-top" alt="Programme Musculation">
                     <div class="card-body">
                         <h5 class="card-title">Programme Musculation</h5>
                         <p class="card-text">Développez votre force et tonifiez vos muscles.</p>
@@ -75,7 +75,7 @@ include_once __DIR__ . '/../commun/header.php';
                 <a href="index.php?page=inscription" class="btn btn-primary btn-lg">Créer un Compte</a>
             </div>
             <div class="col-md-6 text-center">
-                <img src="/GitHub/ClientLegerBTS/assets/img/newlogoFatFitness.svg" alt="Logo FatFitness" class="img-fluid" style="max-width: 60%;">
+                <img src="assets/img/newlogoFatFitness.svg" alt="Logo FatFitness" class="img-fluid" style="max-width: 60%;">
             </div>
         </div>
     </section>
