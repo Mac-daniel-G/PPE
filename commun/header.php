@@ -15,7 +15,7 @@ var_dump($_SESSION);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Lien vers le fichier CSS personnalisé -->
     <link rel="stylesheet" href="../assets/css/style.css">
-    <title>FatFitness</title>
+    <title>FatFitness Limited</title>
 </head>
 <body>
     <!-- Barre de navigation Bootstrap -->
@@ -24,7 +24,7 @@ var_dump($_SESSION);
             <!-- Logo et titre -->
             <a class="navbar-brand d-flex align-items-center" href="index.php">
                 <img src="/GitHub/ClientLegerBTS/assets/img/newlogoFatFitness.svg" alt="Logo FatFitness" width="40" height="40" class="me-2">
-                <span>FatFitness</span>
+                <span>FatFitness Limited</span>
             </a>
             <!-- Bouton pour mobile -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">

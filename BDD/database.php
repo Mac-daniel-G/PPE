@@ -3,7 +3,8 @@
 $host = 'localhost';
 $dbname = 'fatfitness_db';
 $username = 'root';
-$password = '';
+$password = 'root';
+
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
