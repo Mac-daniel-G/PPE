@@ -1,4 +1,3 @@
-
 DROP database IF EXISTS  fatfitness_db;
 CREATE database fatfitness_db;
 USE fatfitness_db;
