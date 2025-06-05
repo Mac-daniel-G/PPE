@@ -1,5 +1,6 @@
 <?php
 // app/Models/User.php
+
 class User {
     private $pdo;
 
@@ -19,10 +20,16 @@ class User {
             $stmt->execute(['email' => $email]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
         }
+
         return $user ?: null;
     }
 
     public function verifyPassword($plainPassword, $hash) {
         return password_verify($plainPassword, $hash);
+    }
+
+    // ✅ Vérifie si le mot de passe respecte les exigences ANSSI
+    public static function isPasswordSecure($password) {
+        return preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{12,}$/', $password);
     }
 }

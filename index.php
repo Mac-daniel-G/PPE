@@ -1,66 +1,36 @@
 <?php
-
-// Liste des pages autorisées
+// Liste des pages autorisées avec leur chemin relatif
 $allowedPages = [
     'accueil' => 'View/accueil.php',
-    'connexion' => __DIR__ . '/../connexion.php',
-    'inscription' => __DIR__ . '/../inscription.php',
-    'programmes' => __DIR__ . '/../programmes/index.php',
-    'salles' => __DIR__ . '/../salle.php'
+    'connexion' => 'View/connexion.php',
+    'inscription' => 'View/inscription.php',
+    'programmes' => 'View/programmes/index.php',
+    'salles' => 'View/salle.php',
+    'mentions_legales' => 'View/mentions_legales.php',
+    'cgu' => 'View/cgu.php',
+    'boutique' => 'View/boutique.php',
+    'contact' => 'View/contact.php',
+    'deconnexion' => 'View/deconnexion.php',
+    'compte' => 'View/compte.php',
+    'mesRendeVous' => 'View/mes_rendez_vous.php',
+    'creeProgramme' => 'View/cree_programme.php',
 ];
 
-// Récupérer la page demandée
-$page = $_GET['page'] ?? 'accueil'; // Par défaut, 'accueil'
+// Récupérer la page demandée, par défaut 'accueil'
+$page = $_GET['page'] ?? 'accueil';
 
-// Vérifier si la page est autorisée et existe
+// Sécuriser la page demandée (existe dans la liste autorisée)
 if (array_key_exists($page, $allowedPages)) {
     $filePath = __DIR__ . '/' . $allowedPages[$page];
 
     if (file_exists($filePath)) {
-        include($filePath);
+        include $filePath;
     } else {
         http_response_code(404);
-        echo "";
+        echo "Page non trouvée.";
     }
-} 
-
-switch($page){
-    case 'programme':
-        include ('View/programmes/index.php');
-        break;
-    case 'salle':
-        include ('View/salle.php');
-        break;
-    case 'inscription':
-        include ('View/inscription.php');
-        break;
-    case 'connexion':
-        include ('View/connexion.php');
-        break;
-    case 'mentions_legales':
-        include ('View/mentions_legales.php');
-        break;
-    case 'cgu':
-        include ('View/cgu.php');
-        break;
-    case 'boutique':
-        include ('View/boutique.php');
-        break;
-    case 'contact':
-        include ('View/contact.php');
-        break;
-    case 'deconnexion':
-        include ('View/deconnexion.php');
-        break;
-    case 'compte':
-        include ('View/compte.php');
-        break;
-    case 'mesRendeVous':
-        include ('View/mes_rendez_vous.php');
-        break;
-    case 'creeProgramme':
-        include ('View/cree_programme.php');
-        break;
+} else {
+    http_response_code(404);
+    echo "Page non autorisée.";
 }
-
 ?>

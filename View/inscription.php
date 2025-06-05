@@ -5,7 +5,7 @@ require_once __DIR__ . '/../BDD/database.php';
 $error = '';
 $success = '';
 
-$nom = $prenom = $email = $telephone = $motDePasse = $confirm_mot_de_passe = '';
+$nom = $prenom = $email = $telephone = $mot_de_passe = $confirm_mot_de_passe = '';
 $role = $specialite = $objectif = '';
 $age = $taille = $poids = null;
 $sexe = null;
@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $prenom = trim($_POST['prenom'] ?? '');
     $email = filter_var($_POST['email'] ?? '', FILTER_VALIDATE_EMAIL);
     $telephone = trim($_POST['telephone'] ?? '');
-    $motDePasse = $_POST['mot_de_passe'] ?? '';
+    $mot_de_passe = $_POST['mot_de_passe'] ?? '';
     $confirm_mot_de_passe = $_POST['confirm_mot_de_passe'] ?? '';
     $role = $_POST['role'] ?? '';
 
@@ -26,57 +26,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $poids = isset($_POST['poids']) ? floatval($_POST['poids']) : null;
     $objectif = trim($_POST['objectif'] ?? '');
 
-    if (!$nom || !$prenom || !$email || !$telephone || !$motDePasse || !$confirm_mot_de_passe || !$role) {
+    if (!$nom || !$prenom || !$email || !$telephone || !$mot_de_passe || !$confirm_mot_de_passe || !$role) {
         $error = 'Veuillez remplir tous les champs obligatoires.';
-    } elseif ($motDePasse !== $confirm_mot_de_passe) {
+    } elseif ($mot_de_passe !== $confirm_mot_de_passe) {
         $error = "Les mots de passe ne correspondent pas.";
+    } elseif (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{12,}$/', $mot_de_passe)) {
+        $error = "Le mot de passe doit contenir au moins 12 caractères, avec majuscule, minuscule, chiffre et caractère spécial.";
     } else {
         try {
             // Vérifier si l'email existe déjà dans coach ou sportif
             $stmt = $pdo->prepare('SELECT COUNT(*) FROM coach WHERE Email = :email');
-            $stmt->bindParam(':email', $email);
-            $stmt->execute();
+            $stmt->execute(['email' => $email]);
             $coachExists = $stmt->fetchColumn();
 
             $stmt = $pdo->prepare('SELECT COUNT(*) FROM sportif WHERE Email = :email');
-            $stmt->bindParam(':email', $email);
-            $stmt->execute();
+            $stmt->execute(['email' => $email]);
             $sportifExists = $stmt->fetchColumn();
 
             if ($coachExists > 0 || $sportifExists > 0) {
                 $error = "Cet email est déjà utilisé.";
             } else {
-                $hashedPassword = password_hash($motDePasse, PASSWORD_DEFAULT);
+                $hashedPassword = password_hash($mot_de_passe, PASSWORD_DEFAULT);
 
                 if ($role === 'coach') {
                     $stmt = $pdo->prepare('INSERT INTO coach (Nom, Prenom, Specialite, Email, Telephone, motDePasse) 
                                            VALUES (:nom, :prenom, :specialite, :email, :telephone, :motDePasse)');
-                    $stmt->bindParam(':nom', $nom);
-                    $stmt->bindParam(':prenom', $prenom);
-                    $stmt->bindParam(':specialite', $specialite);
-                    $stmt->bindParam(':email', $email);
-                    $stmt->bindParam(':telephone', $telephone);
-                    $stmt->bindParam(':motDePasse', $hashedPassword);
-                    $stmt->execute();
+                    $stmt->execute([
+                        'nom' => $nom,
+                        'prenom' => $prenom,
+                        'specialite' => $specialite,
+                        'email' => $email,
+                        'telephone' => $telephone,
+                        'motDePasse' => $hashedPassword
+                    ]);
                     $success = "Inscription réussie ! Vous pouvez maintenant vous connecter.";
                     
                 } elseif ($role === 'sportif') {
                     $stmt = $pdo->prepare('INSERT INTO sportif (Nom, Prenom, Age, Sexe, Taille, Poids, Objectif, Email, Telephone, motDePasse) 
                                            VALUES (:nom, :prenom, :age, :sexe, :taille, :poids, :objectif, :email, :telephone, :motDePasse)');
-                    $stmt->bindParam(':nom', $nom);
-                    $stmt->bindParam(':prenom', $prenom);
-                    $stmt->bindParam(':age', $age);
-                    $stmt->bindParam(':sexe', $sexe);
-                    $stmt->bindParam(':taille', $taille);
-                    $stmt->bindParam(':poids', $poids);
-                    $stmt->bindParam(':objectif', $objectif);
-                    $stmt->bindParam(':email', $email);
-                    $stmt->bindParam(':telephone', $telephone); 
-                    $stmt->bindParam(':motDePasse', $hashedPassword);
-                    $stmt->execute();
+                    $stmt->execute([
+                        'nom' => $nom,
+                        'prenom' => $prenom,
+                        'age' => $age,
+                        'sexe' => $sexe,
+                        'taille' => $taille,
+                        'poids' => $poids,
+                        'objectif' => $objectif,
+                        'email' => $email,
+                        'telephone' => $telephone,
+                        'motDePasse' => $hashedPassword
+                    ]);
                     $success = "Inscription réussie ! Vous pouvez maintenant vous connecter.";
                 }                                
-
             }
         } catch (PDOException $e) {
             $error = "Erreur lors de l'inscription : " . $e->getMessage();
@@ -91,13 +92,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h2 class="text-center text-primary mb-4">Inscription</h2>
 
             <?php if ($error): ?>
-                <div class="alert alert-danger"> <?= htmlspecialchars($error) ?> </div>
+                <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
             <?php if ($success): ?>
-                <div class="alert alert-success"> <?= htmlspecialchars($success) ?> </div>
+                <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
             <?php endif; ?>
 
-            <form method="POST" action="" enctype="multipart/form-data">
+            <form method="POST" action="">
                 <div class="mb-3">
                     <label for="nom" class="form-label">Nom</label>
                     <input type="text" class="form-control" id="nom" name="nom" value="<?= htmlspecialchars($nom) ?>" required>
@@ -115,8 +116,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="tel" class="form-control" id="telephone" name="telephone" value="<?= htmlspecialchars($telephone) ?>" required>
                 </div>
                 <div class="mb-3">
-                    <label for="motDePasse" class="form-label">Mot de passe</label>
-                    <input type="password" class="form-control" id="motDePasse" name="mot_de_passe" required>
+                    <label for="mot_de_passe" class="form-label">Mot de passe</label>
+                    <input type="password" class="form-control" id="mot_de_passe" name="mot_de_passe" required
+                           pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{12,}$"
+                           title="Au moins 12 caractères, avec majuscule, minuscule, chiffre et caractère spécial">
                 </div>
                 <div class="mb-3">
                     <label for="confirm_mot_de_passe" class="form-label">Confirmer le mot de passe</label>
@@ -126,8 +129,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label for="role" class="form-label">Vous êtes :</label>
                     <select class="form-select" id="role" name="role" required onchange="toggleFields()">
                         <option value="">Sélectionnez</option>
-                        <option value="sportif" <?= ($role === 'sportif') ? 'selected' : '' ?>>sportif</option>
-                        <option value="coach" <?= ($role === 'coach') ? 'selected' : '' ?>>coach</option>
+                        <option value="sportif" <?= ($role === 'sportif') ? 'selected' : '' ?>>Sportif</option>
+                        <option value="coach" <?= ($role === 'coach') ? 'selected' : '' ?>>Coach</option>
                     </select>
                 </div>
 
@@ -174,7 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <script>
 function toggleFields() {
-    let role = document.getElementById("role").value;
+    const role = document.getElementById("role").value;
     document.getElementById("coachFields").style.display = role === "coach" ? "block" : "none";
     document.getElementById("sportifFields").style.display = role === "sportif" ? "block" : "none";
 }
